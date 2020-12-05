@@ -15,6 +15,7 @@ public class User {
 	private String email;
 	private String password;
 	private String phone;
+	private Boolean active;
 
 	public User(String name, String email, String password, String phone) {
 		super();
@@ -22,6 +23,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.phone = phone;
+		this.active = true;
 	}
 
 	public User(String name, String email, String password) {
@@ -29,6 +31,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.active = true;
 	}
 
 	public User() {
@@ -69,5 +72,13 @@ public class User {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 }
