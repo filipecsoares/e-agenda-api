@@ -1,5 +1,7 @@
 package com.filipe.agenda.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,13 +11,14 @@ import javax.persistence.Id;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String email;
 	private String password;
 	private String phone;
 	private Boolean active;
+	private LocalDateTime createdAt;
 
 	public User(String name, String email, String password, String phone) {
 		super();
@@ -24,6 +27,7 @@ public class User {
 		this.password = password;
 		this.phone = phone;
 		this.active = true;
+		this.createdAt = LocalDateTime.now();
 	}
 
 	public User(String name, String email, String password) {
@@ -32,6 +36,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.active = true;
+		this.createdAt = LocalDateTime.now();
 	}
 
 	public User() {
@@ -80,5 +85,9 @@ public class User {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 }
