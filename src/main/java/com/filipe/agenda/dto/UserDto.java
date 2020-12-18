@@ -52,4 +52,8 @@ public class UserDto {
 	public static List<UserDto> cast(List<User> users) {
 		return users.stream().map(UserDto::new).collect(Collectors.toList());
 	}
+
+	public static UserDto cast(User user) {
+		return new UserDto(user);
+	}
 }
