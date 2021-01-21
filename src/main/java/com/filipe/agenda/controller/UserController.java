@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.filipe.agenda.dto.UserDto;
@@ -40,8 +41,8 @@ public class UserController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody User user) {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void update(@RequestBody User user) {
 		userService.update(user);
-		return ResponseEntity.ok("Updated successfully.");
 	}
 }

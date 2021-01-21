@@ -59,10 +59,10 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void shouldReturnOkStatusOnPutRequest() throws Exception {
+	public void shouldReturnNoContentStatusOnPutRequest() throws Exception {
 		User validUser = new User("Valid Name", "valid@email.com", "validPassword");
 		mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(validUser))).andExpect(status().isOk());
+				.content(objectMapper.writeValueAsString(validUser))).andExpect(status().isNoContent());
 		verify(service, times(1)).update(any(User.class));
 	}
 }
