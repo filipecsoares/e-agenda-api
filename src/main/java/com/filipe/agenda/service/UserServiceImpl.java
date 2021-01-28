@@ -27,10 +27,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getOne(Long userId) {
 		User user = userRepository.getOne(userId);
-		if (user != null) {
-			return new UserDto(user);
-		}
-		return null;
+		return new UserDto(user);
 	}
 
+	@Override
+	public UserDto findByEmail(String email) {
+		User user = userRepository.findByEmail(email).orElse(null);
+		return new UserDto(user);
+	}
 }

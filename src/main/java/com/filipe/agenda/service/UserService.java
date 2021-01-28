@@ -10,4 +10,6 @@ public interface UserService {
 	public void update(User user);
 
 	public UserDto getOne(Long userId);
+
+	public UserDto findByEmail(String email);
 }

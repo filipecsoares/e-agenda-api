@@ -8,6 +8,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,13 +54,29 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void shouldReturnNullIfUserNotExists() {
+	void shouldReturnAnEmptyObjectIfUserNotExists() {
 		Long userId = 1L;
 
 		when(repository.getOne(any(Long.class))).thenReturn(null);
 		UserDto userDto = service.getOne(userId);
 		verify(repository, times(1)).getOne(any(Long.class));
 
-		assertNull(userDto);
+		assertNotNull(userDto);
+		assertNull(userDto.getId());
+		assertNull(userDto.getEmail());
+	}
+
+	@Test
+	void shouldFindUserByEmail() {
+		String validEmail = "valid@email.com";
+		User user = new User("Valid name", validEmail, "valid_password");
+		Optional<User> userOptional = Optional.of(user);
+
+		when(repository.findByEmail(any(String.class))).thenReturn(userOptional);
+		UserDto userDto = service.findByEmail(validEmail);
+		verify(repository, times(1)).findByEmail(any(String.class));
+
+		assertNotNull(userDto);
+		assertEquals(userDto.getEmail(), user.getEmail());
 	}
 }

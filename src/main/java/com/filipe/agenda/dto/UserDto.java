@@ -17,12 +17,14 @@ public class UserDto {
 
 	public UserDto(User user) {
 		super();
-		this.id = user.getId();
-		this.name = user.getName();
-		this.email = user.getEmail();
-		this.phone = user.getPhone();
-		this.active = user.getActive();
-		this.createdAt = user.getCreatedAt();
+		if (user != null) {
+			this.id = user.getId();
+			this.name = user.getName();
+			this.email = user.getEmail();
+			this.phone = user.getPhone();
+			this.active = user.getActive();
+			this.createdAt = user.getCreatedAt();
+		}
 	}
 
 	public Long getId() {

@@ -36,6 +36,9 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<User> save(@RequestBody User user) {
+		if (userService.findByEmail(user.getEmail()) != null) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		User createdUser = userService.create(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
 	}
