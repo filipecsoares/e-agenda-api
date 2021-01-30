@@ -1,5 +1,8 @@
 package com.filipe.agenda.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +27,27 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll() {
-		return ResponseEntity.ok("It's Ok");
+	public ResponseEntity<List<UserDto>> getAll() {
+		List<UserDto> users = userService.getAll();
+		return ResponseEntity.status(HttpStatus.OK).body(users);
 	}
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
-		UserDto user = userService.getOne(userId);
-		return ResponseEntity.status(HttpStatus.OK).body(user);
+		Optional<User> optionalUser = userService.getOne(userId);
+		if (optionalUser.isPresent()) {
+			return ResponseEntity.ok(new UserDto(optionalUser.get()));
+		}
+		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<User> save(@RequestBody User user) {
-		if (userService.findByEmail(user.getEmail()) != null) {
+	public ResponseEntity<UserDto> save(@RequestBody User user) {
+		if (userService.findByEmail(user.getEmail()).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		User createdUser = userService.create(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+		return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.cast(createdUser));
 	}
 
 	@PutMapping

@@ -1,5 +1,9 @@
 package com.filipe.agenda.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +29,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto getOne(Long userId) {
-		User user = userRepository.getOne(userId);
-		return new UserDto(user);
+	public Optional<User> getOne(Long userId) {
+		return userRepository.findById(userId);
 	}
 
 	@Override
-	public UserDto findByEmail(String email) {
-		User user = userRepository.findByEmail(email).orElse(null);
-		return new UserDto(user);
+	public List<UserDto> getAll() {
+		List<User> users = userRepository.findAll();
+		return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 }

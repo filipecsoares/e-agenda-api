@@ -2,7 +2,7 @@ package com.filipe.agenda.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.filipe.agenda.dto.UserDto;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.repository.UserRepository;
 
@@ -44,26 +43,25 @@ class UserServiceImplTest {
 	void shouldGetUserById() {
 		User user = new User("Valid name", "valid@email.com", "valid_password");
 		Long userId = 1L;
+		Optional<User> userOptional = Optional.of(user);
 
-		when(repository.getOne(any(Long.class))).thenReturn(user);
-		UserDto userDto = service.getOne(userId);
-		verify(repository, times(1)).getOne(any(Long.class));
+		when(repository.findById(any(Long.class))).thenReturn(userOptional);
+		Optional<User> optional = service.getOne(userId);
+		verify(repository, times(1)).findById(any(Long.class));
 
-		assertNotNull(userDto);
-		assertEquals(userDto.getEmail(), user.getEmail());
+		assertTrue(optional.isPresent());
+		assertEquals(optional.get().getEmail(), user.getEmail());
 	}
 
 	@Test
-	void shouldReturnAnEmptyObjectIfUserNotExists() {
+	void shouldReturnAnEmptyOptionalIfUserNotExists() {
 		Long userId = 1L;
 
-		when(repository.getOne(any(Long.class))).thenReturn(null);
-		UserDto userDto = service.getOne(userId);
-		verify(repository, times(1)).getOne(any(Long.class));
+		when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
+		Optional<User> optional = service.getOne(userId);
+		verify(repository, times(1)).findById(any(Long.class));
 
-		assertNotNull(userDto);
-		assertNull(userDto.getId());
-		assertNull(userDto.getEmail());
+		assertTrue(optional.isEmpty());
 	}
 
 	@Test
@@ -73,10 +71,10 @@ class UserServiceImplTest {
 		Optional<User> userOptional = Optional.of(user);
 
 		when(repository.findByEmail(any(String.class))).thenReturn(userOptional);
-		UserDto userDto = service.findByEmail(validEmail);
+		Optional<User> optional = service.findByEmail(validEmail);
 		verify(repository, times(1)).findByEmail(any(String.class));
 
-		assertNotNull(userDto);
-		assertEquals(userDto.getEmail(), user.getEmail());
+		assertTrue(optional.isPresent());
+		assertEquals(optional.get().getEmail(), user.getEmail());
 	}
 }

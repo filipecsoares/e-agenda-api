@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.filipe.agenda.dto.UserDto;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.service.UserService;
 
@@ -42,8 +43,7 @@ public class UserControllerTest {
 	public void shouldReturnOkStatusOnGetRequestWithIdParam() throws Exception {
 		Long userId = 1L;
 		User returnedUser = new User("Valid Name", "valid@email.com", "validPassword");
-		UserDto returnedUserDto = UserDto.cast(returnedUser);
-		when(service.getOne(any(Long.class))).thenReturn(returnedUserDto);
+		when(service.getOne(any(Long.class))).thenReturn(Optional.of(returnedUser));
 		mockMvc.perform(get("/users/" + userId)).andExpect(status().isOk());
 		verify(service, times(1)).getOne(any(Long.class));
 	}
