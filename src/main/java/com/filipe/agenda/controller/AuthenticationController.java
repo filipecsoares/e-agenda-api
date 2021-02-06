@@ -30,7 +30,7 @@ public class AuthenticationController {
 		UsernamePasswordAuthenticationToken login = form.converter();
 		try {
 			Authentication authentication = authManager.authenticate(login);
-			String token = tokenService.gerarToken(authentication);
+			String token = tokenService.generateToken(authentication);
 			return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.badRequest().build();

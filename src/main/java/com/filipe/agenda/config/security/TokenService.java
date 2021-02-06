@@ -21,16 +21,16 @@ public class TokenService {
 	@Value("${agenda.jwt.secret}")
 	private String secret;
 
-	public String gerarToken(Authentication authentication) {
+	public String generateToken(Authentication authentication) {
 		User user = (User) authentication.getPrincipal();
 		Date today = new Date();
 		Date expirationDate = new Date(today.getTime() + Long.parseLong(expiration));
 
-		return Jwts.builder().setIssuer("API do Fórum da Alura").setSubject(user.getId().toString()).setIssuedAt(today)
+		return Jwts.builder().setIssuer("API do E-Agenda").setSubject(user.getId().toString()).setIssuedAt(today)
 				.setExpiration(expirationDate).signWith(SignatureAlgorithm.HS256, secret).compact();
 	}
 
-	public boolean isTokenValido(String token) {
+	public boolean isValidToken(String token) {
 		try {
 			Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
 			return true;
@@ -39,7 +39,7 @@ public class TokenService {
 		}
 	}
 
-	public Long getIdUsuario(String token) {
+	public Long getUserId(String token) {
 		Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
 		return Long.parseLong(claims.getSubject());
 	}
