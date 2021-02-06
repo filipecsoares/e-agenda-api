@@ -3,6 +3,8 @@ package com.filipe.agenda.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +45,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserDto> save(@RequestBody User user) {
+	public ResponseEntity<UserDto> save(@RequestBody @Valid User user) {
 		if (userService.findByEmail(user.getEmail()).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
@@ -54,7 +56,7 @@ public class UserController {
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@RequestBody User user) {
+	public void update(@RequestBody @Valid User user) {
 		userService.update(user);
 	}
 }

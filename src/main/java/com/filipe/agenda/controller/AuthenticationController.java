@@ -1,5 +1,7 @@
 package com.filipe.agenda.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +28,7 @@ public class AuthenticationController {
 	private TokenService tokenService;
 
 	@PostMapping
-	public ResponseEntity<TokenDto> authenticate(@RequestBody LoginForm form) {
+	public ResponseEntity<TokenDto> authenticate(@RequestBody @Valid LoginForm form) {
 		UsernamePasswordAuthenticationToken login = form.converter();
 		try {
 			Authentication authentication = authManager.authenticate(login);
