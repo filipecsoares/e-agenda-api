@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.filipe.agenda.controller.form.UserUpdateForm;
 import com.filipe.agenda.dto.UserDto;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.repository.UserRepository;
+import com.filipe.agenda.utils.EncodeAdapter;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,18 +21,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User user) {
+		user.setPassword(new EncodeAdapter().encode(user.getPassword()));
 		return userRepository.save(user);
 	}
 
 	@Override
-	public void update(User user) {
-		// TODO Auto-generated method stub
-
+	public Optional<User> findById(Long userId) {
+		return userRepository.findById(userId);
 	}
 
 	@Override
-	public Optional<User> getOne(Long userId) {
-		return userRepository.findById(userId);
+	public User getOne(Long userId) {
+		return userRepository.getOne(userId);
 	}
 
 	@Override
@@ -42,5 +44,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public User update(Long id, UserUpdateForm userForm) {
+		User user = getOne(id);
+		user.setName(userForm.getName());
+		user.setPassword(new EncodeAdapter().encode(userForm.getPassword()));
+		user.setPhone(userForm.getPhone());
+		return user;
 	}
 }

@@ -46,7 +46,7 @@ class UserServiceImplTest {
 		Optional<User> userOptional = Optional.of(user);
 
 		when(repository.findById(any(Long.class))).thenReturn(userOptional);
-		Optional<User> optional = service.getOne(userId);
+		Optional<User> optional = service.findById(userId);
 		verify(repository, times(1)).findById(any(Long.class));
 
 		assertTrue(optional.isPresent());
@@ -58,7 +58,7 @@ class UserServiceImplTest {
 		Long userId = 1L;
 
 		when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
-		Optional<User> optional = service.getOne(userId);
+		Optional<User> optional = service.findById(userId);
 		verify(repository, times(1)).findById(any(Long.class));
 
 		assertTrue(optional.isEmpty());

@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.filipe.agenda.controller.form.UserUpdateForm;
 import com.filipe.agenda.dto.UserDto;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.service.UserService;
@@ -36,7 +36,7 @@ public class UserController {
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
-		Optional<User> optionalUser = userService.getOne(userId);
+		Optional<User> optionalUser = userService.findById(userId);
 		if (optionalUser.isPresent()) {
 			return ResponseEntity.ok(new UserDto(optionalUser.get()));
 		}
@@ -48,16 +48,15 @@ public class UserController {
 		if (userService.findByEmail(user.getEmail()).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		User createdUser = userService.create(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.cast(createdUser));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid User user) {
-		Optional<User> optional = userService.getOne(id);
+	public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserUpdateForm userForm) {
+		Optional<User> optional = userService.findById(id);
 		if (optional.isPresent()) {
-			userService.update(user);
+			User user = userService.update(id, userForm);
 			return ResponseEntity.ok(new UserDto(user));
 		}
 		return ResponseEntity.notFound().build();

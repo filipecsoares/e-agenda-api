@@ -27,6 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.filipe.agenda.config.security.AuthenticationService;
 import com.filipe.agenda.config.security.TokenService;
+import com.filipe.agenda.controller.form.UserUpdateForm;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.repository.UserRepository;
 import com.filipe.agenda.service.UserService;
@@ -78,9 +79,9 @@ public class UserControllerTest {
 	public void shouldReturnOkStatusOnGetRequestWithIdParam() throws Exception {
 		Long userId = 1L;
 		User returnedUser = new User("Valid Name", "valid@email.com", "validPassword");
-		when(service.getOne(any(Long.class))).thenReturn(Optional.of(returnedUser));
+		when(service.findById(any(Long.class))).thenReturn(Optional.of(returnedUser));
 		mockMvc.perform(get("/users/" + userId)).andExpect(status().isOk());
-		verify(service, times(1)).getOne(any(Long.class));
+		verify(service, times(1)).findById(any(Long.class));
 	}
 
 	@Test
@@ -98,14 +99,14 @@ public class UserControllerTest {
 		Long userId = 1L;
 		User validUser = new User("Valid Name", "valid@email.com", "validPassword");
 		Optional<User> userOptional = Optional.of(validUser);
-		when(service.getOne(any(Long.class))).thenReturn(userOptional);
+		when(service.findById(any(Long.class))).thenReturn(userOptional);
 		mockMvc.perform(put("/users/" + userId).contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(validUser))).andExpect(status().isOk());
-		verify(service, times(1)).update(any(User.class));
+		verify(service, times(1)).update(any(Long.class), any(UserUpdateForm.class));
 	}
 
 	@Test
-	public void shouldReturnNotFoundStatusIfUserNotExists() throws Exception {
+	public void shouldReturnNotFoundStatusOnPutRequestIfUserNotExists() throws Exception {
 		Long userId = 1L;
 		User validUser = new User("Valid Name", "valid@email.com", "validPassword");
 		mockMvc.perform(put("/users/" + userId).contentType(MediaType.APPLICATION_JSON)
