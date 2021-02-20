@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.filipe.agenda.repository.UserRepository;
 import com.filipe.agenda.utils.EncodeAdapter;
@@ -42,10 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Configuracoes de autorizacao
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
-				.antMatchers(HttpMethod.GET, "/users/*").permitAll().antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.anyRequest().authenticated().and().csrf().disable().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		http.cors().and().authorizeRequests().antMatchers(HttpMethod.GET, "/users/*").permitAll()
+				.antMatchers(HttpMethod.GET, "/users").permitAll().antMatchers(HttpMethod.POST, "/auth").permitAll()
+				.antMatchers(HttpMethod.POST, "/users").permitAll().anyRequest().authenticated().and().csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.addFilterBefore(new AuthenticationTokenFilter(tokenService, userRepository),
 						UsernamePasswordAuthenticationFilter.class);
 	}
@@ -53,5 +55,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Configuracoes de recursos estaticos(js, css, imagens, etc.)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("*");
+			}
+		};
 	}
 }
