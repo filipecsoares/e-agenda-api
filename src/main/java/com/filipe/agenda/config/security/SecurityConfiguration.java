@@ -44,9 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Configuracoes de autorizacao
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().authorizeRequests().antMatchers(HttpMethod.GET, "/users/*").permitAll()
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/users/*").permitAll()
 				.antMatchers(HttpMethod.GET, "/users").permitAll().antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.antMatchers(HttpMethod.POST, "/users").permitAll().anyRequest().authenticated().and().csrf().disable()
+				.antMatchers(HttpMethod.POST, "/users").permitAll().anyRequest().authenticated().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.addFilterBefore(new AuthenticationTokenFilter(tokenService, userRepository),
 						UsernamePasswordAuthenticationFilter.class);
@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*");
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
 			}
 		};
 	}

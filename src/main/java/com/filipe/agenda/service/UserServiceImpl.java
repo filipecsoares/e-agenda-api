@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.filipe.agenda.controller.form.UserUpdateForm;
 import com.filipe.agenda.dto.UserDto;
@@ -50,7 +51,9 @@ public class UserServiceImpl implements UserService {
 	public User update(Long id, UserUpdateForm userForm) {
 		User user = getOne(id);
 		user.setName(userForm.getName());
-		user.setPassword(new EncodeAdapter().encode(userForm.getPassword()));
+		if (StringUtils.hasText(userForm.getPassword())) {
+			user.setPassword(new EncodeAdapter().encode(userForm.getPassword()));
+		}
 		user.setPhone(userForm.getPhone());
 		return user;
 	}

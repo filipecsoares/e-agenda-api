@@ -10,8 +10,6 @@ public class UserUpdateForm {
 	@NotNull
 	@NotEmpty
 	private String name;
-	@NotNull
-	@NotEmpty
 	@Length(min = 4)
 	private String password;
 	private String phone;

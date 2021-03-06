@@ -3,6 +3,7 @@ package com.filipe.agenda.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.cast(createdUser));
 	}
 
+	@Transactional
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserUpdateForm userForm) {
 		Optional<User> optional = userService.findById(id);
