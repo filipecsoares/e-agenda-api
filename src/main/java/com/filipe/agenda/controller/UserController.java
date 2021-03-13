@@ -22,19 +22,25 @@ import com.filipe.agenda.dto.UserDto;
 import com.filipe.agenda.model.User;
 import com.filipe.agenda.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/users")
+@Api(value = "User API")
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value = "Exibe a lista de usuários")
 	@GetMapping
 	public ResponseEntity<List<UserDto>> getAll() {
 		List<UserDto> users = userService.getAll();
 		return ResponseEntity.status(HttpStatus.OK).body(users);
 	}
 
+	@ApiOperation(value = "Consulta usuário por ID")
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
 		Optional<User> optionalUser = userService.findById(userId);
@@ -44,6 +50,7 @@ public class UserController {
 		return ResponseEntity.notFound().build();
 	}
 
+	@ApiOperation(value = "Cadastrar um novo usuário")
 	@PostMapping
 	public ResponseEntity<UserDto> save(@RequestBody @Valid User user) {
 		if (userService.findByEmail(user.getEmail()).isPresent()) {
@@ -53,6 +60,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.cast(createdUser));
 	}
 
+	@ApiOperation(value = "Atualizar um usuário")
 	@Transactional
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserUpdateForm userForm) {
