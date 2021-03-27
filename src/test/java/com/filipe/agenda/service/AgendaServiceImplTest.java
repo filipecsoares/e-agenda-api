@@ -1,5 +1,6 @@
 package com.filipe.agenda.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,4 +46,14 @@ class AgendaServiceImplTest {
 		assertEquals(newAgenda.getFromHour(), agendaCreated.getFromHour());
 	}
 
+	@Test
+	void shouldGetAllAgendas() {
+		List<Agenda> agendas = Arrays.asList(new Agenda(), new Agenda());
+		when(repository.findAll()).thenReturn(agendas);
+		List<Agenda> foundAgendas = service.getAll();
+		verify(repository, times(1)).findAll();
+
+		assertNotNull(foundAgendas);
+		assertThat(foundAgendas.size() == 2);
+	}
 }

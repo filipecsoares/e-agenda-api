@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,5 +82,10 @@ public class AgendaControllerTest {
 		mockMvc.perform(post("/agendas").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(validAgenda))).andExpect(status().isCreated());
 		verify(service, times(1)).create(any(Agenda.class));
+	}
+
+	@Test
+	public void shouldReturnOkStatusOnGetRequestWithNoParams() throws Exception {
+		mockMvc.perform(get("/agendas")).andExpect(status().isOk());
 	}
 }

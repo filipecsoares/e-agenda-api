@@ -1,10 +1,13 @@
 package com.filipe.agenda.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +27,17 @@ public class AgendaController {
 	@Autowired
 	private AgendaService agendaService;
 
-	@ApiOperation(value = "Cadastrar um novo usuário")
+	@ApiOperation(value = "Cadastrar uma nova agenda")
 	@PostMapping
 	public ResponseEntity<Agenda> save(@RequestBody @Valid Agenda agenda) {
 		Agenda createdAgenda = agendaService.create(agenda);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdAgenda);
+	}
+
+	@ApiOperation(value = "Exibe a lista de todas as agendas")
+	@GetMapping
+	public ResponseEntity<List<Agenda>> getAll() {
+		List<Agenda> agendas = agendaService.getAll();
+		return ResponseEntity.status(HttpStatus.OK).body(agendas);
 	}
 }
