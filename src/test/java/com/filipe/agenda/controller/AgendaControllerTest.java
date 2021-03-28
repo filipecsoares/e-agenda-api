@@ -76,8 +76,8 @@ public class AgendaControllerTest {
 		LocalTime toHour = LocalTime.now();
 		LocalTime serviceTime = LocalTime.of(1, 0);
 		String daysOfWeek = "2,3,4,5,6";
-		Agenda validAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek);
-		Agenda returnedAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek);
+		Agenda validAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
+		Agenda returnedAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
 		when(service.create(any(Agenda.class))).thenReturn(returnedAgenda);
 		mockMvc.perform(post("/agendas").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(validAgenda))).andExpect(status().isCreated());

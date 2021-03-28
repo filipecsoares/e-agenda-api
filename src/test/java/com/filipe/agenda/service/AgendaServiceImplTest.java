@@ -36,7 +36,7 @@ class AgendaServiceImplTest {
 		LocalTime toHour = LocalTime.now();
 		LocalTime serviceTime = LocalTime.of(1, 0);
 		String daysOfWeek = "2,3,4,5,6";
-		Agenda newAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek);
+		Agenda newAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
 
 		when(repository.save(any(Agenda.class))).thenReturn(newAgenda);
 		Agenda agendaCreated = service.create(newAgenda);
