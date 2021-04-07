@@ -9,4 +9,6 @@ public interface AgendaService {
 	public Agenda create(Agenda agenda);
 
 	public List<Agenda> getAll();
+
+	public Agenda getByUserId(Long userId);
 }

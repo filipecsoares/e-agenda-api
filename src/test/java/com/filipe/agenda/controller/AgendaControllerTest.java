@@ -88,4 +88,13 @@ public class AgendaControllerTest {
 	public void shouldReturnOkStatusOnGetRequestWithNoParams() throws Exception {
 		mockMvc.perform(get("/agendas")).andExpect(status().isOk());
 	}
+
+	@Test
+	public void shouldReturnOkStatusOnGetRequestWithUserIdParams() throws Exception {
+		Long userId = 1L;
+		Agenda agenda = new Agenda();
+		when(service.getByUserId(userId)).thenReturn(agenda);
+		mockMvc.perform(get("/agendas/" + userId)).andExpect(status().isOk());
+		verify(service, times(1)).getByUserId(any());
+	}
 }

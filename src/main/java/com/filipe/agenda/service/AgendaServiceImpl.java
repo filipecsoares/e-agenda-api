@@ -23,4 +23,13 @@ public class AgendaServiceImpl implements AgendaService {
 	public List<Agenda> getAll() {
 		return agendaRepository.findAll();
 	}
+
+	@Override
+	public Agenda getByUserId(Long userId) {
+		List<Agenda> agendasByUser = agendaRepository.getByUserId(userId);
+		if (agendasByUser != null && !agendasByUser.isEmpty()) {
+			return agendasByUser.get(0);
+		}
+		return null;
+	}
 }
