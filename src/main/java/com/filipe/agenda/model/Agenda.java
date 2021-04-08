@@ -36,6 +36,8 @@ public class Agenda {
 	@Column(columnDefinition = "TIME")
 	private LocalTime lunchBreakTo;
 
+	private String name;
+
 	private String address;
 
 	private String daysOfWeek;
@@ -44,7 +46,7 @@ public class Agenda {
 	}
 
 	public Agenda(User user, LocalTime fromHour, LocalTime toHour, LocalTime serviceTime, LocalTime lunchBreakFrom,
-			LocalTime lunchBreakTo, String daysOfWeek, String address) {
+			LocalTime lunchBreakTo, String daysOfWeek, String name, String address) {
 		super();
 		this.user = user;
 		this.fromHour = fromHour;
@@ -53,6 +55,7 @@ public class Agenda {
 		this.lunchBreakFrom = lunchBreakFrom;
 		this.lunchBreakTo = lunchBreakTo;
 		this.daysOfWeek = daysOfWeek;
+		this.name = name;
 		this.address = address;
 	}
 
@@ -118,6 +121,14 @@ public class Agenda {
 
 	public void setDaysOfWeek(String daysOfWeek) {
 		this.daysOfWeek = daysOfWeek;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getAddress() {
