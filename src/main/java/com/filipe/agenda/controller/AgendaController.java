@@ -1,7 +1,9 @@
 package com.filipe.agenda.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,9 +46,21 @@ public class AgendaController {
 	}
 
 	@ApiOperation(value = "Exibe a agenda por usuário")
-	@GetMapping("/{userId}")
+	@GetMapping("/user/{userId}")
 	public ResponseEntity<Agenda> getByUserId(@PathVariable Long userId) {
 		Agenda agenda = agendaService.getByUserId(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(agenda);
+	}
+
+	@ApiOperation(value = "Atualizar uma agenda por Id")
+	@Transactional
+	@PutMapping("/{id}")
+	public ResponseEntity<Agenda> update(@PathVariable Long id, @RequestBody @Valid Agenda agendaForm) {
+		Optional<Agenda> optional = agendaService.findById(id);
+		if (optional.isPresent()) {
+			Agenda agenda = agendaService.update(id, agendaForm);
+			return ResponseEntity.ok(agenda);
+		}
+		return ResponseEntity.notFound().build();
 	}
 }

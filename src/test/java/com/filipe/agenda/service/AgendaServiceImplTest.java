@@ -3,6 +3,7 @@ package com.filipe.agenda.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ class AgendaServiceImplTest {
 		LocalTime toHour = LocalTime.now();
 		LocalTime serviceTime = LocalTime.of(1, 0);
 		String daysOfWeek = "2,3,4,5,6";
-		Agenda newAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
+		Agenda newAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null, null);
 
 		when(repository.save(any(Agenda.class))).thenReturn(newAgenda);
 		Agenda agendaCreated = service.create(newAgenda);
@@ -55,5 +57,16 @@ class AgendaServiceImplTest {
 
 		assertNotNull(foundAgendas);
 		assertThat(foundAgendas.size() == 2);
+	}
+
+	@Test
+	void shouldReturnAnEmptyOptionalIfAgendaNotExists() {
+		Long agendaId = 1L;
+
+		when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
+		Optional<Agenda> optional = service.findById(agendaId);
+		verify(repository, times(1)).findById(any(Long.class));
+
+		assertTrue(optional.isEmpty());
 	}
 }

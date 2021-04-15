@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalTime;
@@ -76,8 +77,9 @@ public class AgendaControllerTest {
 		LocalTime toHour = LocalTime.now();
 		LocalTime serviceTime = LocalTime.of(1, 0);
 		String daysOfWeek = "2,3,4,5,6";
-		Agenda validAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
-		Agenda returnedAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null);
+		Agenda validAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null, null);
+		Agenda returnedAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null,
+				null);
 		when(service.create(any(Agenda.class))).thenReturn(returnedAgenda);
 		mockMvc.perform(post("/agendas").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(validAgenda))).andExpect(status().isCreated());
@@ -94,7 +96,35 @@ public class AgendaControllerTest {
 		Long userId = 1L;
 		Agenda agenda = new Agenda();
 		when(service.getByUserId(userId)).thenReturn(agenda);
-		mockMvc.perform(get("/agendas/" + userId)).andExpect(status().isOk());
+		mockMvc.perform(get("/agendas/user/" + userId)).andExpect(status().isOk());
 		verify(service, times(1)).getByUserId(any());
+	}
+
+	@Test
+	public void shouldReturnOkStatusOnPutRequest() throws Exception {
+		Long agendaId = 1L;
+		Agenda validAgenda = getValidAgenda();
+		Optional<Agenda> agendaOptional = Optional.of(validAgenda);
+		when(service.findById(any(Long.class))).thenReturn(agendaOptional);
+		mockMvc.perform(put("/agendas/" + agendaId).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(validAgenda))).andExpect(status().isOk());
+		verify(service, times(1)).update(any(Long.class), any(Agenda.class));
+	}
+
+	@Test
+	public void shouldReturnNotFoundStatusOnPutRequestIfAgendaNotExists() throws Exception {
+		Long agendaId = 1L;
+		Agenda validAgenda = getValidAgenda();
+		mockMvc.perform(put("/agendas/" + agendaId).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(validAgenda))).andExpect(status().isNotFound());
+	}
+
+	private Agenda getValidAgenda() {
+		LocalTime fromHour = LocalTime.now();
+		LocalTime toHour = LocalTime.now();
+		LocalTime serviceTime = LocalTime.of(1, 0);
+		String daysOfWeek = "2,3,4,5,6";
+		Agenda validAgenda = new Agenda(new User(), fromHour, toHour, serviceTime, null, null, daysOfWeek, null, null);
+		return validAgenda;
 	}
 }
