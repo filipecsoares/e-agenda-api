@@ -101,6 +101,15 @@ public class AgendaControllerTest {
 	}
 
 	@Test
+	public void shouldReturnOkStatusOnGetRequestWithIdParams() throws Exception {
+		Long agendaId = 1L;
+		Optional<Agenda> agenda = Optional.of(new Agenda());
+		when(service.findById(agendaId)).thenReturn(agenda);
+		mockMvc.perform(get("/agendas/" + agendaId)).andExpect(status().isOk());
+		verify(service, times(1)).findById(any());
+	}
+
+	@Test
 	public void shouldReturnOkStatusOnPutRequest() throws Exception {
 		Long agendaId = 1L;
 		Agenda validAgenda = getValidAgenda();

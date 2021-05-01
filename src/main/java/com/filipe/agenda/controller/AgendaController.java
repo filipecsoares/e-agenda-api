@@ -52,6 +52,16 @@ public class AgendaController {
 		return ResponseEntity.status(HttpStatus.OK).body(agenda);
 	}
 
+	@ApiOperation(value = "Consulta agenda por ID")
+	@GetMapping("/{agendaId}")
+	public ResponseEntity<Agenda> getById(@PathVariable Long agendaId) {
+		Optional<Agenda> optionalAgenda = agendaService.findById(agendaId);
+		if (optionalAgenda.isPresent()) {
+			return ResponseEntity.ok(optionalAgenda.get());
+		}
+		return ResponseEntity.notFound().build();
+	}
+
 	@ApiOperation(value = "Atualizar uma agenda por Id")
 	@Transactional
 	@PutMapping("/{id}")
