@@ -1,15 +1,30 @@
-version: '3.1'
-
+version: "3.7"
 services:
+  e-agenda-api:
+    image: filipesoares/e-agenda-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/agenda?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      - db
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:latest
+    restart: always
     ports:
       - 3307:3306
     environment:
+      MYSQL_DATABASE: agenda
+      MYSQL_USER: app-user
+      MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - eagenda:/var/lib/mysql
       
 volumes:
   eagenda:  
+  
