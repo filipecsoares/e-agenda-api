@@ -44,6 +44,13 @@ public class AppointmentController {
 		List<Appointment> appointments = appointmentService.getAllOpen();
 		return ResponseEntity.status(HttpStatus.OK).body(appointments);
 	}
+	
+	@ApiOperation(value = "Exibe a lista de todos os agendamentos de uma agenda")
+	@GetMapping("/{agendaId}")
+	public ResponseEntity<List<Appointment>> getAllOpenByAgenda(@PathVariable Long agendaId) {
+		List<Appointment> appointments = appointmentService.getAllOpenByAgenda(agendaId);
+		return ResponseEntity.status(HttpStatus.OK).body(appointments);
+	}
 
 	@ApiOperation(value = "Cancelar um agendamento por Id")
 	@Transactional

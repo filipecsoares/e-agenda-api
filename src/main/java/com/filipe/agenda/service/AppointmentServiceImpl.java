@@ -39,4 +39,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return repository.findById(appointmentId);
 	}
 
+	@Override
+	public List<Appointment> getAllOpenByAgenda(Long agendaId) {
+		return repository.findByStatusAndAgendaId(Status.OPEN, agendaId);
+	}
+
 }

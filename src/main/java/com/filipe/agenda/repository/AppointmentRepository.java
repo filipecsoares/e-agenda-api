@@ -12,4 +12,6 @@ import com.filipe.agenda.model.Status;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
 	public List<Appointment> findByStatus(Status status);
+	
+	public List<Appointment> findByStatusAndAgendaId(Status status, Long agendaId);
 }

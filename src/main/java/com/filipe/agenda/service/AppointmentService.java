@@ -14,4 +14,6 @@ public interface AppointmentService {
 	public List<Appointment> getAllOpen();
 
 	public Optional<Appointment> findById(Long appointmentId);
+
+	public List<Appointment> getAllOpenByAgenda(final Long agendaId);
 }
