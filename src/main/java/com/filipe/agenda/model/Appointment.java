@@ -32,15 +32,18 @@ public class Appointment {
 
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dtWhen;
+	
+	private String description;
 
 	public Appointment() {
 	}
 
-	public Appointment(Agenda agenda, User user, LocalDateTime dtWhen) {
+	public Appointment(Agenda agenda, User user, LocalDateTime dtWhen, String description) {
 		super();
 		this.agenda = agenda;
 		this.user = user;
 		this.dtWhen = dtWhen;
+		this.description = description;
 		this.status = Status.OPEN;
 	}
 
@@ -82,5 +85,13 @@ public class Appointment {
 
 	public void setDtWhen(LocalDateTime dtWhen) {
 		this.dtWhen = dtWhen;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
