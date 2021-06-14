@@ -16,6 +16,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Autowired
 	private AppointmentRepository repository;
 
+	@Autowired
+	private AppointmentEmailService appointmentEmailService;
+
 	@Override
 	public Appointment cancel(Long id) {
 		Appointment appointment = repository.getOne(id);
@@ -26,7 +29,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public Appointment appointment(Appointment appointment) {
 		appointment.setStatus(Status.OPEN);
-		return repository.save(appointment);
+		Appointment savedAppointment = repository.save(appointment);
+		if (hasValidUser(savedAppointment)) {
+			appointmentEmailService.sendEmailToClient(savedAppointment.getUser().getId(), savedAppointment.getDtWhen());
+			appointmentEmailService.sendEmailToWorker(savedAppointment.getUser().getId(), savedAppointment.getDtWhen());
+		}
+		return savedAppointment;
+	}
+
+	private boolean hasValidUser(Appointment savedAppointment) {
+		return savedAppointment != null && savedAppointment.getUser() != null
+				&& savedAppointment.getUser().getId() != null;
 	}
 
 	@Override
