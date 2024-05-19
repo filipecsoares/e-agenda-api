@@ -63,10 +63,10 @@ public class UserControllerTest {
 		Optional<User> userOptional = Optional.of(validUser);
 		when(authenticationService.loadUserByUsername(any(String.class))).thenReturn(validUser);
 		when(tokenService.generateToken(any(Authentication.class))).thenReturn(validToken);
-		when(tokenService.isValidToken(any(String.class))).thenReturn(true);
-		when(tokenService.isValidToken(isNull())).thenReturn(true);
-		when(tokenService.getUserId(isNull())).thenReturn(1L);
-		when(tokenService.getUserId(any(String.class))).thenReturn(1L);
+		when(tokenService.isValidToken(any(String.class))).thenReturn(Boolean.TRUE);
+		when(tokenService.isValidToken(isNull())).thenReturn(Boolean.TRUE);
+		when(tokenService.getUserId(isNull())).thenReturn(Long.valueOf(1L));
+		when(tokenService.getUserId(any(String.class))).thenReturn(Long.valueOf(1L));
 		when(userRepository.findById(any(Long.class))).thenReturn(userOptional);
 	}
 
@@ -77,7 +77,7 @@ public class UserControllerTest {
 
 	@Test
 	public void shouldReturnOkStatusOnGetRequestWithIdParam() throws Exception {
-		Long userId = 1L;
+		long userId = 1L;
 		User returnedUser = new User("Valid Name", "valid@email.com", "validPassword");
 		when(service.findById(any(Long.class))).thenReturn(Optional.of(returnedUser));
 		mockMvc.perform(get("/users/" + userId)).andExpect(status().isOk());
@@ -96,7 +96,7 @@ public class UserControllerTest {
 
 	@Test
 	public void shouldReturnOkStatusOnPutRequest() throws Exception {
-		Long userId = 1L;
+		long userId = 1L;
 		User validUser = new User("Valid Name", "valid@email.com", "validPassword");
 		Optional<User> userOptional = Optional.of(validUser);
 		when(service.findById(any(Long.class))).thenReturn(userOptional);
@@ -107,7 +107,7 @@ public class UserControllerTest {
 
 	@Test
 	public void shouldReturnNotFoundStatusOnPutRequestIfUserNotExists() throws Exception {
-		Long userId = 1L;
+		long userId = 1L;
 		User validUser = new User("Valid Name", "valid@email.com", "validPassword");
 		mockMvc.perform(put("/users/" + userId).contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(validUser))).andExpect(status().isNotFound());
