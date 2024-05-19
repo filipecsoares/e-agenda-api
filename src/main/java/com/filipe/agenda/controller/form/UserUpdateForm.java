@@ -1,14 +1,11 @@
 package com.filipe.agenda.controller.form;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 public class UserUpdateForm {
 
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String name;
 	@Length(min = 4)
 	private String password;

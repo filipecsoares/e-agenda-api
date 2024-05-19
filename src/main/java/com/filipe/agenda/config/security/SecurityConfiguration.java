@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -32,6 +34,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] AUTH_WHITELIST = {
 			// -- Swagger UI v2
 			"/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**" };
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(HttpMethod.POST, "/auth").permitAll()
+						.requestMatchers(HttpMethod.POST, "/users").permitAll()
+						.requestMatchers(HttpMethod.GET, "/users/*").permitAll()
+						.requestMatchers(HttpMethod.GET, "/users").permitAll()
+						.anyRequest().authenticated())
+				.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.addFilterBefore(new AuthenticationTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
 
 	@Override
 	@Bean

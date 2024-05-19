@@ -3,9 +3,8 @@ package com.filipe.agenda.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,11 +55,8 @@ public class AgendaController {
 	@GetMapping("/{agendaId}")
 	public ResponseEntity<Agenda> getById(@PathVariable Long agendaId) {
 		Optional<Agenda> optionalAgenda = agendaService.findById(agendaId);
-		if (optionalAgenda.isPresent()) {
-			return ResponseEntity.ok(optionalAgenda.get());
-		}
-		return ResponseEntity.notFound().build();
-	}
+        return optionalAgenda.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 	@ApiOperation(value = "Atualizar uma agenda por Id")
 	@Transactional

@@ -3,9 +3,8 @@ package com.filipe.agenda.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +43,8 @@ public class UserController {
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
 		Optional<User> optionalUser = userService.findById(userId);
-		if (optionalUser.isPresent()) {
-			return ResponseEntity.ok(new UserDto(optionalUser.get()));
-		}
-		return ResponseEntity.notFound().build();
-	}
+        return optionalUser.map(user -> ResponseEntity.ok(new UserDto(user))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 	@ApiOperation(value = "Cadastrar um novo usuário")
 	@PostMapping
