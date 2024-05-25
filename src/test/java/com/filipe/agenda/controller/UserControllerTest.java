@@ -65,8 +65,8 @@ public class UserControllerTest {
 		when(tokenService.generateToken(any(Authentication.class))).thenReturn(validToken);
 		when(tokenService.isValidToken(any(String.class))).thenReturn(Boolean.TRUE);
 		when(tokenService.isValidToken(isNull())).thenReturn(Boolean.TRUE);
-		when(tokenService.getUserId(isNull())).thenReturn(Long.valueOf(1L));
-		when(tokenService.getUserId(any(String.class))).thenReturn(Long.valueOf(1L));
+		when(tokenService.getUserId(isNull())).thenReturn(1L);
+		when(tokenService.getUserId(any(String.class))).thenReturn(1L);
 		when(userRepository.findById(any(Long.class))).thenReturn(userOptional);
 	}
 

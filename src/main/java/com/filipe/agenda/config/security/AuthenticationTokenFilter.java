@@ -15,8 +15,8 @@ import com.filipe.agenda.repository.UserRepository;
 
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
-	private TokenService tokenService;
-	private UserRepository userRepository;
+	private final TokenService tokenService;
+	private final UserRepository userRepository;
 
 	public AuthenticationTokenFilter(TokenService tokenService, UserRepository userRepository) {
 		this.tokenService = tokenService;
@@ -44,10 +44,10 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
 	private String getToken(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
-		if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
+		if (token == null || !token.startsWith("Bearer ")) {
 			return null;
 		}
 
-		return token.substring(7, token.length());
+		return token.substring(7);
 	}
 }
