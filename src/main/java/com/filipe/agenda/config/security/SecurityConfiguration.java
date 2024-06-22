@@ -1,6 +1,5 @@
 package com.filipe.agenda.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,18 +18,19 @@ import com.filipe.agenda.utils.EncodeAdapter;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	@Autowired
-	private AuthenticationService authenticationService;
-	@Autowired
-	private TokenService tokenService;
-	@Autowired
-	private UserRepository userRepository;
+	private final TokenService tokenService;
+	private final UserRepository userRepository;
 
 	private static final String[] AUTH_WHITELIST = {
 			// -- Swagger UI v2
 			"/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**" };
 
-	@Bean
+    public SecurityConfiguration(TokenService tokenService, UserRepository userRepository) {
+        this.tokenService = tokenService;
+        this.userRepository = userRepository;
+    }
+
+    @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(AUTH_WHITELIST).permitAll()

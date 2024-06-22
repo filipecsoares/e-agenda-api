@@ -1,7 +1,10 @@
 package com.filipe.agenda.config.security;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.Optional;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +27,10 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
 			throws ServletException, IOException {
-		String token = getToken(request);
-		boolean isValid = tokenService.isValidToken(token);
+		final String token = getToken(request);
+		final boolean isValid = tokenService.isValidToken(token);
 		if (isValid) {
 			authenticateClient(token);
 		}
@@ -36,7 +39,11 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
 	private void authenticateClient(String token) {
 		Long userId = tokenService.getUserId(token);
-		User user = userRepository.findById(userId).get();
+		Optional<User> userOptional = userRepository.findById(userId);
+		if (userOptional.isEmpty()) {
+			throw new InvalidParameterException("Invalid token");
+		}
+		User user = userOptional.get();
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
 				user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
